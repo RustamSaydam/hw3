@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+    title: Микросервис генерации показаний приборов
+    version: 0.0.1
+servers:
+    - url: http//localhost:8081/api/v1/data
+      description: Base server 
+paths:
+    /send:
+        post:
+            summary: Отправка текущих значений консьюмеру
+            tags:
+                - send
+            operationId: sendData
+            responses:
+                '200':
+                    description: Показания преборов успешно отправлены
+                'default':
+                    description: Нестандартная ошибка
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+components:
+    schemas:
+        Data:
+            type: object
+            required:
+                - sensorId
+                - timestamp
+                - measurement
+                - measurementType
+            properties:
+                sensorId:
+                    type: number
+                    example: 42
+                timestamp:
+                    type: string
+                    format: 2023-09-12T12:10:05
+                measurement:
+                    type: number
+                    example: 15.5
+                measurementType:
+                    type: string
+                    enum:
+                        - TEMPERATURE
+                        - VOLTAGE
+                        - POWER
+        Error:
+            type: object
+            required:
+                - code
+                - message
+            properties:
+                code: 
+                    type: integer
+                message:
+                    type: string
